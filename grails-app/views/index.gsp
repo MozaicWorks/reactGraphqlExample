@@ -2,13 +2,16 @@
 <html>
 <head>
 	<meta name="layout" content="main"/>
-	<title>Welcome to Grails</title>
+	<title>Person list</title>
+	<asset:stylesheet src="application.css"/>
 
-	<asset:link rel="icon" href="favicon.ico" type="image/x-ico"/>
 </head>
 
 <body>
-<div id="app"></div>
+<div class="container">
+	<div id="app" class="row col s12"></div>
+</div>
 <asset:javascript src="bundle.js"/>
+<asset:javascript src="application.js"/>
 </body>
 </html>

@@ -2,11 +2,15 @@ import {ApolloProvider} from 'react-apollo';
 import {ApolloClient} from 'apollo-client';
 import {HttpLink} from 'apollo-link-http';
 import {InMemoryCache} from 'apollo-cache-inmemory';
-import React, {Component} from 'react';
+import React from 'react';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {graphql} from 'react-apollo';
 import gql from 'graphql-tag';
+import PersonList from "./PersonList";
 
-var ReactDOM = require('react-dom');
+const ReactDOM = require('react-dom');
 
 const client = new ApolloClient({
     link: new HttpLink({uri: "http://localhost:8080/graphql/index"}),
@@ -19,6 +23,7 @@ const personListQuery = gql`query {
     id
     name,
     contacts {
+      id
       email {
         emailAddress
       }
@@ -27,35 +32,17 @@ const personListQuery = gql`query {
 }`;
 
 
-function MyComponentWithData({data: {personList}}) {
+const PersonListFromGraph = graphql(personListQuery)(({data: {personList}}) => {
     return (
-        <div>
-            {personList ?
-                personList.map((person) => {
-                    return <p key={person.id}>
-                        {person.name}
-                        {contactList(person.contacts)}
-                    </p>
-                }) : ""
-            }
-        </div>
+        <PersonList list={personList}/>
     )
-}
-
-function contactList(contacts) {
-    return contacts ?
-        contacts.map((contact) => {
-            return <span style={{display: "block", paddingLeft: "15px"}}>
-                        {contact.email.emailAddress}
-                    </span>
-        }) : ""
-}
-
-const MyComponentWithDataGraph = graphql(personListQuery)(MyComponentWithData);
+});
 
 ReactDOM.render(
-    <ApolloProvider client={client}>
-        <MyComponentWithDataGraph/>
-    </ApolloProvider>,
-    document.getElementById('app')
+    <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+        <ApolloProvider client={client}>
+            <PersonListFromGraph/>
+        </ApolloProvider>
+    </MuiThemeProvider>
+    , document.getElementById('app')
 );
