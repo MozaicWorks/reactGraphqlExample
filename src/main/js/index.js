@@ -28,18 +28,27 @@ const personListQuery = gql`query {
 
 
 function MyComponentWithData({data: {personList}}) {
-    console.log(personList);
     return (
         <div>
             {personList ?
                 personList.map((person) => {
                     return <p key={person.id}>
                         {person.name}
+                        {contactList(person.contacts)}
                     </p>
                 }) : ""
             }
         </div>
     )
+}
+
+function contactList(contacts) {
+    return contacts ?
+        contacts.map((contact) => {
+            return <span style={{display: "block", paddingLeft: "15px"}}>
+                        {contact.email.emailAddress}
+                    </span>
+        }) : ""
 }
 
 const MyComponentWithDataGraph = graphql(personListQuery)(MyComponentWithData);

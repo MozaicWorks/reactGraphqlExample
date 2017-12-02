@@ -3761,7 +3761,6 @@ var personListQuery = (0, _graphqlTag2.default)(_templateObject);
 function MyComponentWithData(_ref) {
     var personList = _ref.data.personList;
 
-    console.log(personList);
     return _react2.default.createElement(
         'div',
         null,
@@ -3769,10 +3768,21 @@ function MyComponentWithData(_ref) {
             return _react2.default.createElement(
                 'p',
                 { key: person.id },
-                person.name
+                person.name,
+                contactList(person.contacts)
             );
         }) : ""
     );
+}
+
+function contactList(contacts) {
+    return contacts ? contacts.map(function (contact) {
+        return _react2.default.createElement(
+            'span',
+            { style: { display: "block", paddingLeft: "15px" } },
+            contact.email.emailAddress
+        );
+    }) : "";
 }
 
 var MyComponentWithDataGraph = (0, _reactApollo.graphql)(personListQuery)(MyComponentWithData);
