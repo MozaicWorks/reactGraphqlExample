@@ -3758,37 +3758,29 @@ var client = new _apolloClient.ApolloClient({
 
 var personListQuery = (0, _graphqlTag2.default)(_templateObject);
 
-client.query({ query: personListQuery }).then(console.log);
-
-var MyComponentWithData = (0, _reactApollo.graphql)(personListQuery)(function (props) {
-    return _react2.default.createElement(
-        'div',
-        null,
-        JSON.stringify(props.data.personList)
-    );
-});
-
-function renderAsList(_ref) {
+function MyComponentWithData(_ref) {
     var personList = _ref.data.personList;
 
     console.log(personList);
     return _react2.default.createElement(
         'div',
         null,
-        personList.map(function (name) {
-            _react2.default.createElement(
+        personList ? personList.map(function (person) {
+            return _react2.default.createElement(
                 'p',
-                null,
-                name
+                { key: person.id },
+                person.name
             );
-        })
+        }) : ""
     );
 }
+
+var MyComponentWithDataGraph = (0, _reactApollo.graphql)(personListQuery)(MyComponentWithData);
 
 ReactDOM.render(_react2.default.createElement(
     _reactApollo.ApolloProvider,
     { client: client },
-    _react2.default.createElement(MyComponentWithData, null)
+    _react2.default.createElement(MyComponentWithDataGraph, null)
 ), document.getElementById('app'));
 
 /***/ }),

@@ -27,31 +27,26 @@ const personListQuery = gql`query {
 }`;
 
 
-client.query({query: personListQuery}).then(console.log)
-
-// Can't make it work to display an html list of some sort.
-// I assume it's because the data is read only at a specific time, or there's a delay
-const MyComponentWithData = graphql(personListQuery)(props =>
-    <div>
-        {JSON.stringify(props.data.personList)}
-    </div>
-);
-
-// This is how I'd like it to work
-function renderAsList({data: {personList}}) {
+function MyComponentWithData({data: {personList}}) {
     console.log(personList);
     return (
         <div>
-            {personList.map((name) => {
-                <p>{name}</p>
-            })}
+            {personList ?
+                personList.map((person) => {
+                    return <p key={person.id}>
+                        {person.name}
+                    </p>
+                }) : ""
+            }
         </div>
     )
 }
 
+const MyComponentWithDataGraph = graphql(personListQuery)(MyComponentWithData);
+
 ReactDOM.render(
     <ApolloProvider client={client}>
-        <MyComponentWithData/>
+        <MyComponentWithDataGraph/>
     </ApolloProvider>,
     document.getElementById('app')
 );
